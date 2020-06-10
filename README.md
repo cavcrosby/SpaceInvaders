@@ -5,9 +5,8 @@ The logic was inspired from https://github.com/attreyabhatt/Space-Invaders-Pygam
 ## Installation
 
 ***Pre-requisites***
-
-    * Python >3.6
-    * pygame
+   * Python >3.6
+   * pygame
 
 ## Usage
 
