@@ -4,7 +4,7 @@ The logic was inspired from https://github.com/attreyabhatt/Space-Invaders-Pygam
 
 ## Installation
 
-*** Pre-requisites ***
+***Pre-requisites***
 
     * Python >3.6
     * pygame
