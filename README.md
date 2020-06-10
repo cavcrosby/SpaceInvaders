@@ -10,7 +10,7 @@ The logic was inspired from https://github.com/attreyabhatt/Space-Invaders-Pygam
 
 ## Usage
 
-```python
+```shell
 git clone https://github.com/reap2sow1/SpaceInvaders.git
 cd SpaceInvaders
 python main.py
