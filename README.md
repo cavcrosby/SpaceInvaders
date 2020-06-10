@@ -5,13 +5,13 @@ The logic was inspired from https://github.com/attreyabhatt/Space-Invaders-Pygam
 ## Installation
 
 ***Pre-requisites***
-
-    * Python >3.6
-    * pygame
+   * Python >3.6
+   * pygame
 
 ## Usage
 
 ```python
+git clone https://github.com/reap2sow1/SpaceInvaders.git
 cd SpaceInvaders
 python main.py
 ```
