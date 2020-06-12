@@ -1,13 +1,17 @@
 # Standard Library Imports
+from abc import ABC, abstractproperty
 
 # Third Party Imports
 
 # Local Application Imports
 
 
-class BaseObject:
+class BaseObject(ABC):
 
-    IMG = NotImplemented
+    @abstractproperty
+    def IMG(self):
+
+        NotImplemented
 
     def __init_subclass__(cls, *args, **kwargs):
         """Specifications required by future SpaceInvader subclasses."""
