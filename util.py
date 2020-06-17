@@ -25,6 +25,12 @@ def draw_baseobject(obj, screen):
     screen.blit(obj.IMG, (obj.x_cord, obj.y_cord))
 
 
+def draw_block(screen, block):
+
+    for rect in block.STRUCTURE:
+        pygame.draw.rect(screen, (0, 0, 0), rect)
+
+
 def fire_bullet(bullet, screen):
     Bullet.bullet_state = Bullet.BULLET_FIRE
     draw_baseobject(bullet, screen)

@@ -11,6 +11,7 @@ from classes.player import Player
 from classes.enemy import Enemy
 from classes.bullet import Bullet
 from classes.score import Score
+from classes.block.block import Block
 
 pygame.init()
 
@@ -47,6 +48,15 @@ player = None
 enemies = None
 bullet = None
 
+# block 1
+
+b1 = Block((125, 350), (175, 400))
+b2 = Block((275, 350), (325, 400))
+b3 = Block((425, 350), (475, 400))
+b4 = Block((575, 350), (625, 400))
+
+blocks = [b1, b2, b3, b4]
+
 
 def main():
 
@@ -64,6 +74,9 @@ def main():
 
         # RGB
         screen.fill((0, 180, 0))
+
+        for block in blocks:
+            util.draw_block(screen, block)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -104,7 +117,7 @@ def main():
                 util.is_collision(
                     enemy.x_cord, bullet.x_cord, enemy.y_cord, bullet.y_cord
                 )
-                if Bullet.bullet_state == Bullet.BULLET_FIRE
+                if Bullet.bullet_state is Bullet.BULLET_FIRE
                 else False
             )
             player_enemy_collision = util.is_collision(
@@ -137,9 +150,18 @@ def main():
         if Bullet.bullet_state is Bullet.BULLET_FIRE:
             util.fire_bullet(bullet, screen)
             bullet.y_cord -= bullet.y_change
-        if bullet.y_cord < 0:
-            bullet.y_cord = player.y_cord
-            Bullet.bullet_state = Bullet.BULLET_READY
+            if bullet.y_cord < 0:
+                Bullet.bullet_state = Bullet.BULLET_READY
+            for block in blocks:
+                for rec in block.STRUCTURE:
+                    bullet_rec_collision = util.is_collision(
+                        rec.x, bullet.x_cord, rec.y, bullet.y_cord
+                    )
+                    if bullet_rec_collision:
+                        block.STRUCTURE.remove(rec)
+                        bullet.y_cord = -1
+                        Bullet.bullet_state = Bullet.BULLET_READY
+                        break
 
         player.x_cord += player.x_cord_change
         util.draw_baseobject(player, screen)
@@ -148,10 +170,9 @@ def main():
 
 
 def game_init():
-    global player, enemies, bullet
+    global player, enemies
     player = Player()
     enemies = [Enemy(SCREEN_BOUNDARY_X) for i in range(NUMBER_OF_ENEMIES)]
-    bullet = Bullet(player)
 
 
 if __name__ == "__main__":

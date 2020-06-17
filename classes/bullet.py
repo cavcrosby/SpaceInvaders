@@ -19,5 +19,5 @@ class Bullet(BaseObject):
 
     def __init__(self, player):
 
-        super().__init__(x_cord=player.x_cord + 16, y_cord=player.y_cord)
+        super().__init__(player.x_cord + 16, player.y_cord)
         self.y_change = 1
