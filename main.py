@@ -60,10 +60,10 @@ enemies = NOT_INITIALIZED
 bullet = NOT_INITIALIZED
 
 # Blocks, or barriers
-block1 = Block((125, 350), (175, 400))
-block2 = Block((275, 350), (325, 400))
-block3 = Block((425, 350), (475, 400))
-block4 = Block((575, 350), (625, 400))
+block1 = Block(top_left=(125, 350), bottom_right=(175, 400))
+block2 = Block(top_left=(275, 350), bottom_right=(325, 400))
+block3 = Block(top_left=(425, 350), bottom_right=(475, 400))
+block4 = Block(top_left=(575, 350), bottom_right=(625, 400))
 blocks = [block1, block2, block3, block4]
 
 
