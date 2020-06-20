@@ -80,7 +80,7 @@ def main():
         screen.fill((0, 180, 0))
         running = game_logic.check_events(player, bullet)
 
-        # bullet Movement
+        # bullet movement
         if Bullet.bullet_state is Bullet.BULLET_FIRE:
             if not Bullet.ON_SCREEN:
                 bullet = game_logic.bullet_init(player)
