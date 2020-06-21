@@ -12,19 +12,32 @@ from classes.player import Player
 from classes.enemy import Enemy
 from classes.bullet import Bullet
 from classes.score import Score
-from classes.block import Block
 
 pygame.init()
 
+# Colors
+
+BLACK = (0, 0, 0)
+GRAY = (100, 100, 100)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+ORANGE = (255, 128, 0)
+PURPLE = (255, 0, 255)
+CYAN = (0, 255, 255)
+
 # Configurations (expected to change frequently)
 
-SCREEN_BOUNDARY_X = 800
-SCREEN_BOUNDARY_Y = 600
 NUMBER_OF_ENEMIES = 12
 POINTS_PER_KILL = 20
+NUMBER_OF_BLOCKS = 5
 
 # Configurations (NOT expected to change frequently)
 
+SCREEN_BOUNDARY_X = 800
+SCREEN_BOUNDARY_Y = 600
 SCREEN_OUT_OF_BOUNDS_Y = SCREEN_BOUNDARY_Y * 5
 DISPLAY_CAPTION = "Space Invaders"
 ICON_PATH = "./images/ufo.png"
@@ -60,11 +73,7 @@ enemies = NOT_INITIALIZED
 bullet = NOT_INITIALIZED
 
 # Blocks, or barriers
-block1 = Block(top_left=(125, 350), bottom_right=(175, 400))
-block2 = Block(top_left=(275, 350), bottom_right=(325, 400))
-block3 = Block(top_left=(425, 350), bottom_right=(475, 400))
-block4 = Block(top_left=(575, 350), bottom_right=(625, 400))
-blocks = [block1, block2, block3, block4]
+blocks = util.create_blocks(NUMBER_OF_BLOCKS)
 
 
 def main():

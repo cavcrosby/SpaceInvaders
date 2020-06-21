@@ -8,8 +8,8 @@ from pygame.rect import Rect
 
 class Block:
 
-    RECTS_PER_COLUMN = 4
-    RECTS_PER_ROW = 3
+    RECTS_PER_COLUMN = 5
+    RECTS_PER_ROW = 4
 
     @property
     def STRUCTURE(self):
@@ -24,14 +24,20 @@ class Block:
 
         left = top_left[X_CORD]
         top = top_left[Y_CORD]
-        width = abs(bottom_right[X_CORD] - top_left[X_CORD])
-        height = abs(bottom_right[Y_CORD] - top_left[Y_CORD])
-        TOP_DECREMENT = height / self.RECTS_PER_COLUMN
-        LEFT_DECREMENT = width / self.RECTS_PER_ROW
+        total_width = abs(bottom_right[X_CORD] - top_left[X_CORD])
+        total_height = abs(bottom_right[Y_CORD] - top_left[Y_CORD])
+        HEIGHT_REC_SIZE = total_height / self.RECTS_PER_COLUMN
+        WIDTH_REC_SIZE = total_width / self.RECTS_PER_ROW
 
         for row_n in range(self.RECTS_PER_ROW):
             top_copy = top
             for col_n in range(self.RECTS_PER_COLUMN):
-                self._structure.append(Rect(left, top_copy, width, height,))
-                top_copy += TOP_DECREMENT
-            left += LEFT_DECREMENT
+                self._structure.append(
+                    Rect(left, top_copy, WIDTH_REC_SIZE, HEIGHT_REC_SIZE,)
+                )
+                top_copy += HEIGHT_REC_SIZE - 1
+            left += WIDTH_REC_SIZE - 1
+            # ({WIDTH_REC_SIZE,HEIGHT_REC_SIZE} - 1)
+            # this is to make Rects appear as one block
+            # layering of the Rects is done top-down, right (repeat)
+
