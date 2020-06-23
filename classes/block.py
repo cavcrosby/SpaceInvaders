@@ -1,6 +1,7 @@
 # Standard Library Imports
 
 # Third Party Imports
+import pygame
 from pygame.rect import Rect
 
 # Local Application Imports
@@ -41,3 +42,7 @@ class Block:
             # this is to make Rects appear as one block
             # layering of the Rects is done top-down, right (repeat)
 
+    def blit(self, screen, COLOR):
+
+        for rect in self.STRUCTURE:
+            pygame.draw.rect(screen, COLOR, rect)

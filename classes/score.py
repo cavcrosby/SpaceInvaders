@@ -8,7 +8,7 @@ from classes.baseobject import BaseObject
 
 class Score(BaseObject):
 
-    IMG = None
+    IMG = BaseObject.NO_IMG
 
     def __init__(self):
 

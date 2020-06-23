@@ -21,3 +21,9 @@ class Bullet(BaseObject):
     def __init__(self, player):
         super().__init__(player.x_cord + 16, player.y_cord)
         self.y_change = 1
+
+    @classmethod
+    def reset_bullet_state(cls):
+
+        cls.bullet_state = cls.BULLET_READY
+        cls.ON_SCREEN = False

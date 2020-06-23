@@ -6,8 +6,8 @@ import pygame
 from pygame import mixer
 
 # Local Application Imports
-import util
-import game_logic
+import core
+import configurations
 from classes.player import Player
 from classes.enemy import Enemy
 from classes.bullet import Bullet
@@ -15,65 +15,34 @@ from classes.score import Score
 
 pygame.init()
 
-# Colors
-
-BLACK = (0, 0, 0)
-GRAY = (100, 100, 100)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-ORANGE = (255, 128, 0)
-PURPLE = (255, 0, 255)
-CYAN = (0, 255, 255)
-
-# Configurations (expected to change frequently)
-
-NUMBER_OF_ENEMIES = 12
-POINTS_PER_KILL = 20
-NUMBER_OF_BLOCKS = 5
-
-# Configurations (NOT expected to change frequently)
-
-SCREEN_BOUNDARY_X = 800
-SCREEN_BOUNDARY_Y = 600
-SCREEN_OUT_OF_BOUNDS_Y = SCREEN_BOUNDARY_Y * 5
-DISPLAY_CAPTION = "Space Invaders"
-ICON_PATH = "./images/ufo.png"
-BACKGROUND_MUSIC_PATH = "./music/background.wav"
-BULLET_SHOOTING_SOUND_PATH = "./music/laser.wav"
-EXPLOSION_SOUND_PATH = "./music/explosion.wav"
-NOT_INITIALIZED = None
-
-# In-game configurations
-X_UPPER_BOUNDARY_PLAYER = NOT_INITIALIZED
-X_UPPER_BOUNDARY_ENEMY = NOT_INITIALIZED
-X_LOWER_BOUNDARY = 0
-Y_LOWER_BOUNDARY = 0
-
 # Creates the screen
-screen = pygame.display.set_mode((SCREEN_BOUNDARY_X, SCREEN_BOUNDARY_Y))
+screen = pygame.display.set_mode(
+    (configurations.SCREEN_BOUNDARY_X, configurations.SCREEN_BOUNDARY_Y)
+)
 
 # Caption
-pygame.display.set_caption(DISPLAY_CAPTION)
+pygame.display.set_caption(configurations.DISPLAY_CAPTION)
 
 # Icon
-icon = pygame.image.load(ICON_PATH)
+icon = pygame.image.load(configurations.ICON_PATH)
 pygame.display.set_icon(icon)
 
 # Sound
-mixer.music.load(BACKGROUND_MUSIC_PATH)
+mixer.music.load(configurations.BACKGROUND_MUSIC_PATH)
 mixer.music.play(-1)
+
+# In-game configurations
+X_UPPER_BOUNDARY_PLAYER = configurations.NOT_INITIALIZED
+X_UPPER_BOUNDARY_ENEMY = configurations.NOT_INITIALIZED
 
 # Main game objects
 score = Score()
-player = NOT_INITIALIZED
-enemies = NOT_INITIALIZED
-bullet = NOT_INITIALIZED
+player = configurations.NOT_INITIALIZED
+enemies = configurations.NOT_INITIALIZED
+bullet = configurations.NOT_INITIALIZED
 
 # Blocks, or barriers
-blocks = util.create_blocks(NUMBER_OF_BLOCKS)
+blocks = core.create_blocks(configurations.NUMBER_OF_BLOCKS)
 
 
 def main():
@@ -87,55 +56,67 @@ def main():
 
         # RGB
         screen.fill((0, 180, 0))
-        running = game_logic.check_events(player, bullet)
+        running = core.check_events(player, bullet)
 
         # bullet movement
         if Bullet.bullet_state is Bullet.BULLET_FIRE:
             if not Bullet.ON_SCREEN:
-                bullet = game_logic.bullet_init(player)
-            if bullet.y_cord < Y_LOWER_BOUNDARY:
-                game_logic.reset_bullet()
+                bullet = core.bullet_init(player)
+            if bullet.y_cord is configurations.OFF_SCREEN:
+                Bullet.reset_bullet_state()
             else:
-                util.draw_baseobject(bullet, screen)
+                bullet.blit(screen)
                 bullet.y_cord -= bullet.y_change
-                game_logic.check_block_bullet_collisions(bullet, blocks)
+                bullet_block_collision = False
+                bullet_block_collision = core.is_block_bullet_collision(blocks, bullet)
+                if bullet_block_collision is not None:
+                    core.react_block_bullet_collision(
+                        bullet_block_collision["block"],
+                        bullet,
+                        bullet_block_collision["rect"],
+                    )
 
-        game_logic.draw_blocks(screen, blocks)
+        for block in blocks:
+            block.blit(screen, configurations.BLACK)
 
         # player movement
-        # player should be stopped on the x axis when the icon_width + position are about to
-        # go out of the upper or lower x boundary
-        if (player.x_cord + player.x_cord_change < X_LOWER_BOUNDARY) or (
+        # player should be stopped on the x axis when the icon_width + position
+        # are about to go out of the upper or lower x boundary
+        if (player.x_cord + player.x_cord_change < configurations.X_LOWER_BOUNDARY) or (
             player.x_cord + player.x_cord_change > X_UPPER_BOUNDARY_PLAYER
         ):
             player.x_cord_change = 0
 
         # enemy movement
-        # enemy should be stopped on the x axis when the icon_width + position are about to
-        # go out of the upper or lower x boundary
+        # enemy should be stopped on the x axis when the icon_width + position
+        # are about to go out of the upper or lower x boundary
         for enemy in enemies:
-            bullet_enemy_collision = game_logic.check_enemy_bullet_collisions(
-                bullet, enemy,
+            bullet_enemy_collision = (
+                core.is_collision(
+                    enemy.x_cord, bullet.x_cord, enemy.y_cord, bullet.y_cord
+                )
+                if Bullet.bullet_state is Bullet.BULLET_FIRE
+                else False
             )
-            player_enemy_collision = util.is_collision(
-                enemy.x_cord, player.x_cord, enemy.y_cord, player.y_cord,
+            player_enemy_collision = core.is_collision(
+                player.x_cord, enemy.x_cord, player.y_cord, enemy.y_cord
             )
             if player_enemy_collision or game_over:
-                game_logic.do_game_over(enemies, screen)
+                core.do_game_over(enemies, screen)
                 game_over = True
                 break
             if bullet_enemy_collision:
-                game_logic.destroy_enemy(bullet, enemy, enemies, score)
-            elif enemy.x_cord + enemy.x_cord_change < X_LOWER_BOUNDARY:
-                game_logic.go_down_right(enemy)
+                core.destroy_enemy(bullet, enemy, enemies, score)
+            elif enemy.x_cord + enemy.x_cord_change < configurations.X_LOWER_BOUNDARY:
+                core.go_down_right(enemy)
             elif enemy.x_cord + enemy.x_cord_change > X_UPPER_BOUNDARY_ENEMY:
-                game_logic.go_down_left(enemy)
+                core.go_down_left(enemy)
+            enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
-            util.draw_baseobject(enemy, screen)
 
+        player.blit(screen)
         player.x_cord += player.x_cord_change
-        util.draw_baseobject(player, screen)
-        util.show_score(score, screen)
+        core.show_score(score, screen)
         pygame.display.update()
 
 
@@ -145,10 +126,13 @@ def game_init():
     global X_UPPER_BOUNDARY_PLAYER
     global X_UPPER_BOUNDARY_ENEMY
     player = Player()
-    enemies = [Enemy(SCREEN_BOUNDARY_X) for i in range(NUMBER_OF_ENEMIES)]
-    X_UPPER_BOUNDARY_PLAYER = SCREEN_BOUNDARY_X - player.IMG_WIDTH
+    enemies = [
+        Enemy(configurations.SCREEN_BOUNDARY_X)
+        for i in range(configurations.NUMBER_OF_ENEMIES)
+    ]
+    X_UPPER_BOUNDARY_PLAYER = configurations.SCREEN_BOUNDARY_X - player.IMG_WIDTH
     X_UPPER_BOUNDARY_ENEMY = (
-        SCREEN_BOUNDARY_X - enemies[0].IMG_WIDTH
+        configurations.SCREEN_BOUNDARY_X - enemies[0].IMG_WIDTH
     )  # assuming all enemies use same image
 
 
