@@ -15,7 +15,9 @@ from classes.enemy import Enemy
 def show_score(score, screen):
 
     font = pygame.font.Font(cg.GAME_FONT, 32)
-    score_text = font.render("Score: " + str(score.value), True, (255, 255, 255))
+    score_text = font.render(
+        "Score: " + str(score.value), True, (255, 255, 255)
+    )
     screen.blit(score_text, (score.x_cord, score.y_cord))
 
 

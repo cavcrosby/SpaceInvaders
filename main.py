@@ -68,7 +68,9 @@ def main():
                 bullet.blit(screen)
                 bullet.y_cord -= bullet.y_change
                 bullet_block_collision = False
-                bullet_block_collision = core.is_block_bullet_collision(blocks, bullet)
+                bullet_block_collision = core.is_block_bullet_collision(
+                    blocks, bullet
+                )
                 if bullet_block_collision is not None:
                     core.react_block_bullet_collision(
                         bullet_block_collision["block"],
@@ -82,9 +84,10 @@ def main():
         # player movement
         # player should be stopped on the x axis when the icon_width + position
         # are about to go out of the upper or lower x boundary
-        if (player.x_cord + player.x_cord_change < configurations.X_LOWER_BOUNDARY) or (
-            player.x_cord + player.x_cord_change > X_UPPER_BOUNDARY_PLAYER
-        ):
+        if (
+            player.x_cord + player.x_cord_change
+            < configurations.X_LOWER_BOUNDARY
+        ) or (player.x_cord + player.x_cord_change > X_UPPER_BOUNDARY_PLAYER):
             player.x_cord_change = 0
 
         # enemy movement
@@ -107,7 +110,10 @@ def main():
                 break
             if bullet_enemy_collision:
                 core.destroy_enemy(bullet, enemy, enemies, score)
-            elif enemy.x_cord + enemy.x_cord_change < configurations.X_LOWER_BOUNDARY:
+            elif (
+                enemy.x_cord + enemy.x_cord_change
+                < configurations.X_LOWER_BOUNDARY
+            ):
                 core.go_down_right(enemy)
             elif enemy.x_cord + enemy.x_cord_change > X_UPPER_BOUNDARY_ENEMY:
                 core.go_down_left(enemy)
@@ -130,7 +136,9 @@ def game_init():
         Enemy(configurations.SCREEN_BOUNDARY_X)
         for i in range(configurations.NUMBER_OF_ENEMIES)
     ]
-    X_UPPER_BOUNDARY_PLAYER = configurations.SCREEN_BOUNDARY_X - player.IMG_WIDTH
+    X_UPPER_BOUNDARY_PLAYER = (
+        configurations.SCREEN_BOUNDARY_X - player.IMG_WIDTH
+    )
     X_UPPER_BOUNDARY_ENEMY = (
         configurations.SCREEN_BOUNDARY_X - enemies[0].IMG_WIDTH
     )  # assuming all enemies use same image
