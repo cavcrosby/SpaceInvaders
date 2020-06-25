@@ -6,7 +6,7 @@ import pygame
 from pygame import mixer
 
 # Local Application Imports
-import configurations as cg
+import configurations
 from classes.block import Block
 from classes.bullet import Bullet
 from classes.enemy import Enemy
@@ -14,7 +14,7 @@ from classes.enemy import Enemy
 
 def show_score(score, screen):
 
-    font = pygame.font.Font(cg.GAME_FONT, 32)
+    font = pygame.font.Font(configurations.GAME_FONT, 32)
     score_text = font.render(
         "Score: " + str(score.value), True, (255, 255, 255)
     )
@@ -24,7 +24,7 @@ def show_score(score, screen):
 def bullet_init(player):
 
     bullet = Bullet(player)
-    bullet_sound = mixer.Sound(cg.BULLET_SHOOTING_SOUND_PATH)
+    bullet_sound = mixer.Sound(configurations.BULLET_SHOOTING_SOUND_PATH)
     bullet_sound.play()
     Bullet.ON_SCREEN = True
     return bullet
@@ -33,12 +33,12 @@ def bullet_init(player):
 def do_game_over(enemies, screen):
     def show_game_over_text():
 
-        font = pygame.font.Font(cg.GAME_FONT, 64)
+        font = pygame.font.Font(configurations.GAME_FONT, 64)
         text = font.render("GAME OVER", True, (255, 255, 255))
         screen.blit(text, (200, 250))
 
     for enemy in enemies:
-        enemy.y_cord = cg.OFF_SCREEN
+        enemy.y_cord = configurations.OFF_SCREEN
     show_game_over_text()
 
 
@@ -64,19 +64,19 @@ def is_collision(x1, x2, y1, y2):
 
 def destroy_enemy(bullet, enemy, enemies, score):
 
-    explosion_sound = mixer.Sound(cg.EXPLOSION_SOUND_PATH)
+    explosion_sound = mixer.Sound(configurations.EXPLOSION_SOUND_PATH)
     explosion_sound.play()
-    bullet.y_cord = cg.OFF_SCREEN
+    bullet.y_cord = configurations.OFF_SCREEN
     Bullet.bullet_state = Bullet.BULLET_READY
-    score.add_points(cg.POINTS_PER_KILL)
+    score.add_points(configurations.POINTS_PER_KILL)
     enemies.remove(enemy)
-    enemies.append(Enemy(cg.SCREEN_BOUNDARY_X))
+    enemies.append(Enemy(configurations.SCREEN_BOUNDARY_X))
 
 
 def react_block_bullet_collision(block, bullet, rect):
 
     block.STRUCTURE.remove(rect)
-    bullet.y_cord = cg.OFF_SCREEN
+    bullet.y_cord = configurations.OFF_SCREEN
     Bullet.bullet_state = Bullet.BULLET_READY
 
 
