@@ -10,7 +10,9 @@ from classes.baseobject import BaseObject
 
 class Enemy(BaseObject):
 
-    IMG = pygame.transform.scale(pygame.image.load("./images/alien.png"), (56, 56))
+    IMG = pygame.transform.scale(
+        pygame.image.load("./images/alien.png"), (56, 56)
+    )
     IMG_WIDTH = IMG.get_rect().size[0]
 
     def __init__(self, screen_boundary_x):
