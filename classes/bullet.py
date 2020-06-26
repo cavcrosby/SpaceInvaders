@@ -19,7 +19,7 @@ class Bullet(BaseObject):
     bullet_state = BULLET_READY
 
     def __init__(self, player):
-        super().__init__(player.x_cord + 16, player.y_cord)
+        super().__init__(player.x_cord + 20, player.y_cord)
         self.y_change = 1
 
     @classmethod
