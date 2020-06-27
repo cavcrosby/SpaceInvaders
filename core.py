@@ -130,7 +130,8 @@ def create_blocks(number_of_blocks):
     TOTAL_WIDTH = (BLOCK_WIDTH * number_of_blocks) + (
         DISTANCE_BETWEEN_BLOCKS * (number_of_blocks - 1)
     )
-    # [TOTAL_WIDTH] This is the range that the blocks and their distances.
+    # [TOTAL_WIDTH] This is total amount of width taken up by all the blocks
+    # plus their distances between them (number_of_blocks - 1).
 
     BLOCKS_X_RANGE = ENDING_X_RANGE - STARTING_X_RANGE
     # [BLOCKS_X_RANGE] This is the range that the blocks and
