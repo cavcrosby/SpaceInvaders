@@ -7,14 +7,14 @@ from pygame import mixer
 
 # Local Application Imports
 import configurations
-from classes.block import Block
+from classes.rectblock import RectBlock
+from classes.enemyblock import EnemyBlock
 from classes.bullet import Bullet
-from classes.enemy import Enemy
 
 
 def show_score(score, screen):
 
-    font = pygame.font.Font(configurations.GAME_FONT, 32)
+    font = pygame.font.Font(configurations.GAME_FONT, 25)
     score_text = font.render(
         "Score: " + str(score.value), True, (255, 255, 255)
     )
@@ -44,13 +44,13 @@ def do_game_over(enemies, screen):
 
 def go_down_right(enemy):
 
-    enemy.x_cord_change = 0.75
+    enemy.x_cord_change = configurations.DEFAULT_ENEMY_SPEED
     enemy.y_cord += enemy.y_cord_change
 
 
 def go_down_left(enemy):
 
-    enemy.x_cord_change = -0.75
+    enemy.x_cord_change = configurations.DEFAULT_ENEMY_SPEED * -1
     enemy.y_cord += enemy.y_cord_change
 
 
@@ -70,7 +70,6 @@ def destroy_enemy(bullet, enemy, enemies, score):
     Bullet.bullet_state = Bullet.BULLET_READY
     score.add_points(configurations.POINTS_PER_KILL)
     enemies.remove(enemy)
-    enemies.append(Enemy(configurations.SCREEN_BOUNDARY_X))
 
 
 def react_block_bullet_collision(block, bullet, rect):
@@ -141,7 +140,7 @@ def create_blocks(number_of_blocks):
 
     for i in range(number_of_blocks):
 
-        block = Block(
+        block = RectBlock(
             top_left=(TOP_LEFT_START, BLOCK_HEIGHT_TOP),
             bottom_right=(TOP_LEFT_START + BLOCK_WIDTH, BLOCK_HEIGHT_BOTTOM),
         )
@@ -149,3 +148,11 @@ def create_blocks(number_of_blocks):
         blocks.append(block)
 
     return blocks
+
+
+def create_enemy_block():
+
+    TOP_LEFT = (50, 50)
+    BOTTOM_RIGHT = (100, 100)
+
+    return EnemyBlock(TOP_LEFT, BOTTOM_RIGHT)
