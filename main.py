@@ -120,6 +120,8 @@ def main():
             enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
 
+        if(len(enemies) == 0):
+            core.do_game_over(enemies, screen)
         player.blit(screen)
         player.x_cord += player.x_cord_change
         core.show_score(score, screen)
