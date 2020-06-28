@@ -1,7 +1,7 @@
 # Changelog
 All changes between releases of this project will be documented here.
 
-## [v1.2.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.1.2) - 2020-06-27
+## [v1.2.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.2.0) - 2020-06-27
 ### Added
 - Block formation for enemies.
 - Game over when destroying all enemies.
