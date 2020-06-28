@@ -6,6 +6,7 @@ import pygame
 
 # Local Application Imports
 from classes.baseobject import BaseObject
+from configurations import DEFAULT_ENEMY_DROP, DEFAULT_ENEMY_SPEED
 
 
 class Enemy(BaseObject):
@@ -20,11 +21,17 @@ class Enemy(BaseObject):
             x_cord=random.randint(0, screen_boundary_x - self.IMG_WIDTH),
             y_cord=random.randint(50, 100),
         )
-        self.x_cord_change = 0.5
-        self.y_cord_change = 20
+        self.x_cord_change = DEFAULT_ENEMY_SPEED
+        self.y_cord_change = DEFAULT_ENEMY_DROP
 
     @classmethod
-    def from_manual_cords(cls, x_cord, y_cord, x_cord_change, y_cord_change):
+    def from_manual_cords(
+        cls,
+        x_cord,
+        y_cord,
+        x_cord_change=DEFAULT_ENEMY_SPEED,
+        y_cord_change=DEFAULT_ENEMY_DROP,
+    ):
         """Generate an enemy at given coordinates with change.
 
         Examples
@@ -35,6 +42,9 @@ class Enemy(BaseObject):
         enemy = cls(cls.IMG_WIDTH)
         enemy.x_cord = x_cord
         enemy.y_cord = y_cord
-        enemy.x_cord_change = x_cord_change
-        enemy.y_cord_change = y_cord_change
+        if(x_cord_change is not DEFAULT_ENEMY_SPEED):
+            enemy.x_cord_change = x_cord_change
+        if(y_cord_change is not DEFAULT_ENEMY_DROP):
+            enemy.y_cord_change = y_cord_change
         return enemy
+    

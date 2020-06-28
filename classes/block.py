@@ -1,16 +1,18 @@
 # Standard Library Imports
+from abc import ABC, abstractmethod
 
 # Third Party Imports
-import pygame
-from pygame.rect import Rect
 
 # Local Application Imports
 
 
-class Block:
+class Block(ABC):
 
-    RECTS_PER_COLUMN = 5
-    RECTS_PER_ROW = 4
+    DEFAULT_PARENT_VALUE = "default"
+    NODES_PER_COLUMN = 5
+    NODES_PER_ROW = 4
+    X_CORD = 0
+    Y_CORD = 1
 
     @property
     def STRUCTURE(self):
@@ -20,29 +22,56 @@ class Block:
     def __init__(self, top_left, bottom_right):
 
         self._structure = list()
-        X_CORD = 0
-        Y_CORD = 1
+        self.top_left = top_left
+        self.bottom_right = bottom_right
 
-        left = top_left[X_CORD]
-        top = top_left[Y_CORD]
-        total_width = abs(bottom_right[X_CORD] - top_left[X_CORD])
-        total_height = abs(bottom_right[Y_CORD] - top_left[Y_CORD])
-        HEIGHT_REC_SIZE = total_height / self.RECTS_PER_COLUMN
-        WIDTH_REC_SIZE = total_width / self.RECTS_PER_ROW
+    def _create_block(self):
 
-        for row_n in range(self.RECTS_PER_ROW):
+        left = self.top_left[self.X_CORD]
+        top = self.top_left[self.Y_CORD]
+        total_width = self._determine_total_width()
+        total_height = self._determine_total_height()
+        NODE_HEIGHT = self._determine_node_height(total_height)
+        NODE_WIDTH = self._determine_node_width(total_width)
+
+        for row_n in range(self.NODES_PER_ROW):
             top_copy = top
-            for col_n in range(self.RECTS_PER_COLUMN):
+            for col_n in range(self.NODES_PER_COLUMN):
                 self._structure.append(
-                    Rect(left, top_copy, WIDTH_REC_SIZE, HEIGHT_REC_SIZE,)
+                    self._return_node(left, top_copy, NODE_WIDTH, NODE_HEIGHT)
                 )
-                top_copy += HEIGHT_REC_SIZE - 1
-            left += WIDTH_REC_SIZE - 1
-            # ({WIDTH_REC_SIZE,HEIGHT_REC_SIZE} - 1)
-            # this is to make Rects appear as one block
-            # layering of the Rects is done top-down, right (repeat)
+                top_copy += NODE_HEIGHT - 1
+            left += NODE_WIDTH - 1
+            # ({NODE_WIDTH,NODE_HEIGHT} - 1)
+            # this is to make nodes appear as one block
+            # layering of the nodes is done top-down, right (repeat)
 
-    def blit(self, screen, COLOR):
+    @abstractmethod
+    def _determine_total_width(self):
 
-        for rect in self.STRUCTURE:
-            pygame.draw.rect(screen, COLOR, rect)
+        NotImplemented
+
+    @abstractmethod
+    def _determine_total_height(self):
+
+        NotImplemented
+
+    @abstractmethod
+    def _determine_node_height(self, total_height):
+
+        NotImplemented
+
+    @abstractmethod
+    def _determine_node_width(self, total_width):
+
+        NotImplemented
+
+    @abstractmethod
+    def _return_node(self, left, top, node_width, node_height):
+
+        NotImplemented
+
+    @abstractmethod
+    def blit(self):
+
+        NotImplemented

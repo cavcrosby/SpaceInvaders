@@ -120,6 +120,8 @@ def main():
             enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
 
+        if(len(enemies) == 0):
+            core.do_game_over(enemies, screen)
         player.blit(screen)
         player.x_cord += player.x_cord_change
         core.show_score(score, screen)
@@ -132,15 +134,12 @@ def game_init():
     global X_UPPER_BOUNDARY_PLAYER
     global X_UPPER_BOUNDARY_ENEMY
     player = Player()
-    enemies = [
-        Enemy(configurations.SCREEN_BOUNDARY_X)
-        for i in range(configurations.NUMBER_OF_ENEMIES)
-    ]
+    enemies = core.create_enemy_block().STRUCTURE
     X_UPPER_BOUNDARY_PLAYER = (
         configurations.SCREEN_BOUNDARY_X - player.IMG_WIDTH
     )
     X_UPPER_BOUNDARY_ENEMY = (
-        configurations.SCREEN_BOUNDARY_X - enemies[0].IMG_WIDTH
+        configurations.SCREEN_BOUNDARY_X - Enemy.IMG_WIDTH
     )  # assuming all enemies use same image
 
 

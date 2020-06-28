@@ -26,6 +26,8 @@ CYAN = (0, 255, 255)
 NUMBER_OF_ENEMIES = 12
 POINTS_PER_KILL = 20
 NUMBER_OF_BLOCKS = 5
+DEFAULT_ENEMY_SPEED = 0.12
+DEFAULT_ENEMY_DROP = 20
 
 # Configurations (NOT expected to change frequently)
 
