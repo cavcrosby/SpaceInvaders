@@ -1,6 +1,14 @@
 # Changelog
 All changes between releases of this project will be documented here.
 
+## [v1.2.1](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.2.1) - 2020-06-28
+### Changed
+- Enemies will now move on both ends of the screen as a block.
+
+### Fixed
+- Where destroying an enemy would require the user to
+press the space-bar twice to fire again.
+
 ## [v1.2.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.2.0) - 2020-06-27
 ### Added
 - Block formation for enemies.
