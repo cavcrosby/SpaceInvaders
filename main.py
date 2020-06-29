@@ -110,13 +110,16 @@ def main():
                 break
             if bullet_enemy_collision:
                 core.destroy_enemy(bullet, enemy, enemies, score)
+                continue
             elif (
                 enemy.x_cord + enemy.x_cord_change
                 < configurations.X_LOWER_BOUNDARY
             ):
-                core.go_down_right(enemy)
+                core.go_down_right(enemies, screen)
+                break
             elif enemy.x_cord + enemy.x_cord_change > X_UPPER_BOUNDARY_ENEMY:
-                core.go_down_left(enemy)
+                core.go_down_left(enemies, screen)
+                break
             enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
 

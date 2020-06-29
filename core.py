@@ -42,16 +42,22 @@ def do_game_over(enemies, screen):
     show_game_over_text()
 
 
-def go_down_right(enemy):
+def go_down_right(enemies, screen):
 
-    enemy.x_cord_change = configurations.DEFAULT_ENEMY_SPEED
-    enemy.y_cord += enemy.y_cord_change
+    for enemy in enemies:
+        enemy.x_cord_change = configurations.DEFAULT_ENEMY_SPEED
+        enemy.y_cord += enemy.y_cord_change
+        enemy.blit(screen)
+        enemy.x_cord += enemy.x_cord_change
 
 
-def go_down_left(enemy):
+def go_down_left(enemies, screen):
 
-    enemy.x_cord_change = configurations.DEFAULT_ENEMY_SPEED * -1
-    enemy.y_cord += enemy.y_cord_change
+    for enemy in enemies:
+        enemy.x_cord_change = configurations.DEFAULT_ENEMY_SPEED * -1
+        enemy.y_cord += enemy.y_cord_change
+        enemy.blit(screen)
+        enemy.x_cord += enemy.x_cord_change
 
 
 def is_collision(x1, x2, y1, y2):
@@ -67,7 +73,7 @@ def destroy_enemy(bullet, enemy, enemies, score):
     explosion_sound = mixer.Sound(configurations.EXPLOSION_SOUND_PATH)
     explosion_sound.play()
     bullet.y_cord = configurations.OFF_SCREEN
-    Bullet.bullet_state = Bullet.BULLET_READY
+    Bullet.reset_bullet_state()
     score.add_points(configurations.POINTS_PER_KILL)
     enemies.remove(enemy)
 

@@ -44,6 +44,7 @@ BULLET_SHOOTING_SOUND_PATH = join(PWD, MUSIC_DIRECTORY_NAME, "laser.wav")
 GAME_FONT = "freesansbold.ttf"
 
 # Other
+
 OFF_SCREEN = -1
 X_LOWER_BOUNDARY = 0
 Y_LOWER_BOUNDARY = 0
