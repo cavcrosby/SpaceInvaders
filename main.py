@@ -3,15 +3,18 @@
 
 # Third Party Imports
 import pygame
+import random
 from pygame import mixer
 
 # Local Application Imports
 import core
 import configurations
-from classes.player import Player
-from classes.enemy import Enemy
-from classes.bullet import Bullet
-from classes.score import Score
+from classes.gameobject import (
+    Player,
+    Enemy,
+    Bullet,
+    Score,
+)
 
 pygame.init()
 
@@ -38,6 +41,7 @@ X_UPPER_BOUNDARY_ENEMY = configurations.NOT_INITIALIZED
 # Main game objects
 score = Score()
 player = configurations.NOT_INITIALIZED
+enemy_block = configurations.NOT_INITIALIZED
 enemies = configurations.NOT_INITIALIZED
 bullet = configurations.NOT_INITIALIZED
 
@@ -48,6 +52,7 @@ blocks = core.create_blocks(configurations.NUMBER_OF_BLOCKS)
 def main():
 
     global bullet
+    global enemy_block
     # Game Loop
     running = True
     game_over = False
@@ -123,6 +128,12 @@ def main():
             enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
 
+        # choice = random.randint(0, 3)
+        # fire_chance = random.randint(1, 5)
+        # bottom_enemy = enemy_block.STRUCTURE[choice][-1]
+        # if(fire_chance in (1, 2)):
+        #     enemy_fire()
+            
         if(len(enemies) == 0):
             core.do_game_over(enemies, screen)
         player.blit(screen)
@@ -132,12 +143,15 @@ def main():
 
 
 def game_init():
+
     global player
     global enemies
     global X_UPPER_BOUNDARY_PLAYER
     global X_UPPER_BOUNDARY_ENEMY
+    global enemy_block
     player = Player()
-    enemies = core.create_enemy_block().STRUCTURE
+    enemy_block = core.create_enemy_block()
+    enemies = enemy_block.UNITS
     X_UPPER_BOUNDARY_PLAYER = (
         configurations.SCREEN_BOUNDARY_X - player.IMG_WIDTH
     )

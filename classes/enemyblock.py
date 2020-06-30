@@ -4,10 +4,11 @@
 
 # Local Application Imports
 from classes.block import Block
-from classes.enemy import Enemy
+from classes.gameobject import Enemy
 
 
 class EnemyBlock(Block):
+
     def __init__(
         self,
         top_left,

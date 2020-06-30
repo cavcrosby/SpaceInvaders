@@ -9,7 +9,7 @@ from pygame import mixer
 import configurations
 from classes.rectblock import RectBlock
 from classes.enemyblock import EnemyBlock
-from classes.bullet import Bullet
+from classes.gameobject import Bullet
 
 
 def show_score(score, screen):
@@ -31,6 +31,7 @@ def bullet_init(player):
 
 
 def do_game_over(enemies, screen):
+    
     def show_game_over_text():
 
         font = pygame.font.Font(configurations.GAME_FONT, 64)
@@ -80,7 +81,7 @@ def destroy_enemy(bullet, enemy, enemies, score):
 
 def react_block_bullet_collision(block, bullet, rect):
 
-    block.STRUCTURE.remove(rect)
+    block.remove_unit(rect)
     bullet.y_cord = configurations.OFF_SCREEN
     Bullet.bullet_state = Bullet.BULLET_READY
 
@@ -88,7 +89,7 @@ def react_block_bullet_collision(block, bullet, rect):
 def is_block_bullet_collision(blocks, bullet):
 
     for block in blocks:
-        for rect in block.STRUCTURE:
+        for rect in block.UNITS:
             bullet_block_collision = is_collision(
                 bullet.x_cord, rect.x, bullet.y_cord, rect.y
             )
