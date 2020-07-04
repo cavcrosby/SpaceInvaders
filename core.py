@@ -9,11 +9,13 @@ from pygame import mixer
 # Local Application Imports
 from classes.rectblock import RectBlock
 from classes.enemyblock import EnemyBlock
-from classes.gameobject import Player, Enemy
+from classes.gameobject import (
+    Player,
+    Enemy,
+)
 from configurations import (
     X_LOWER_BOUNDARY,
     GAME_FONT,
-    SCREEN_BOUNDARY_Y,
     NOT_INITIALIZED,
     OFF_SCREEN_Y_CORD,
     DEFAULT_ENEMY_SPEED,
@@ -37,19 +39,21 @@ def is_player_outof_bounds(player):
     )
 
 
-def is_enemy_outof_upper_bounds(enemy):
+def is_enemy_out_of_upper_bounds(enemy):
 
     return enemy.x_cord + enemy.x_cord_change > Enemy.X_UPPER_BOUNDARY
 
 
-def is_enemy_outof_lower_bounds(enemy):
+def is_enemy_out_of_lower_bounds(enemy):
 
     return enemy.x_cord + enemy.x_cord_change < X_LOWER_BOUNDARY
 
 
-def should_enemy_fire():
+def should_enemy_fire(enemy):
 
-    return random.randint(1, 150) == 1
+    if enemy is not EnemyBlock.DESTROYED_ENEMY_SLOT:
+        return random.randint(1, 150) == 1
+    return False
 
 
 def is_bullet_init(gameobject):
@@ -75,12 +79,16 @@ def track_bullet_movement(bullet, blocks, screen):
         return True
 
 
-def do_game_over(enemies, screen):
+def do_game_over(enemies, screen, sub_text_message):
     def show_game_over_text():
 
         font = pygame.font.Font(GAME_FONT, 64)
         text = font.render("GAME OVER", True, (255, 255, 255))
         screen.blit(text, (200, 250))
+
+        font = pygame.font.Font(GAME_FONT, 32)
+        sub_text = font.render(sub_text_message.upper(), True, (255, 255, 255))
+        screen.blit(sub_text, (205, 315))
 
     for enemy in enemies:
         enemy.y_cord = OFF_SCREEN_Y_CORD

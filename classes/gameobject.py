@@ -1,6 +1,9 @@
 # Standard Library Imports
 import random
-from abc import ABC, abstractproperty
+from abc import (
+    ABC,
+    abstractproperty,
+)
 
 # Third Party Imports
 import pygame
