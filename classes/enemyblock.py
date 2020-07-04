@@ -4,10 +4,13 @@
 
 # Local Application Imports
 from classes.block import Block
-from classes.enemy import Enemy
+from classes.gameobject import Enemy
 
 
 class EnemyBlock(Block):
+
+    DESTROYED_ENEMY_SLOT = -1
+
     def __init__(
         self,
         top_left,
@@ -22,6 +25,15 @@ class EnemyBlock(Block):
         if NODES_PER_ROW is not self.DEFAULT_PARENT_VALUE:
             self.NODES_PER_ROW = NODES_PER_ROW
         self._create_block()
+
+    def replace_enemy(self, enemy, replacement):
+
+        for row in self._structure:
+            for r_enemy in row:
+                if r_enemy == enemy:
+                    enemy_index = row.index(r_enemy)
+                    row_index = self._structure.index(row)
+                    self._structure[row_index][enemy_index] = replacement
 
     def _determine_total_width(self):
 

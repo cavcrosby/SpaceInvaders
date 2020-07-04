@@ -3,51 +3,60 @@
 
 # Third Party Imports
 import pygame
+import random
 from pygame import mixer
 
 # Local Application Imports
 import core
-import configurations
-from classes.player import Player
-from classes.enemy import Enemy
-from classes.bullet import Bullet
-from classes.score import Score
+from classes.enemyblock import EnemyBlock
+from classes.block import Block
+from classes.gameobject import (
+    Player,
+    Score,
+)
+from configurations import (
+    SCREEN_BOUNDARY_X,
+    SCREEN_BOUNDARY_Y,
+    DISPLAY_CAPTION,
+    ICON_PATH,
+    BACKGROUND_MUSIC_PATH,
+    NOT_INITIALIZED,
+    NUMBER_OF_BLOCKS,
+    BLACK,
+    POINTS_PER_KILL,
+)
 
 pygame.init()
 
 # Creates the screen
-screen = pygame.display.set_mode(
-    (configurations.SCREEN_BOUNDARY_X, configurations.SCREEN_BOUNDARY_Y)
-)
+screen = pygame.display.set_mode((SCREEN_BOUNDARY_X, SCREEN_BOUNDARY_Y))
 
 # Caption
-pygame.display.set_caption(configurations.DISPLAY_CAPTION)
+pygame.display.set_caption(DISPLAY_CAPTION)
 
 # Icon
-icon = pygame.image.load(configurations.ICON_PATH)
+icon = pygame.image.load(ICON_PATH)
 pygame.display.set_icon(icon)
 
 # Sound
-mixer.music.load(configurations.BACKGROUND_MUSIC_PATH)
+mixer.music.load(BACKGROUND_MUSIC_PATH)
 mixer.music.play(-1)
-
-# In-game configurations
-X_UPPER_BOUNDARY_PLAYER = configurations.NOT_INITIALIZED
-X_UPPER_BOUNDARY_ENEMY = configurations.NOT_INITIALIZED
 
 # Main game objects
 score = Score()
-player = configurations.NOT_INITIALIZED
-enemies = configurations.NOT_INITIALIZED
-bullet = configurations.NOT_INITIALIZED
+player = NOT_INITIALIZED
+logical_enemy_block = NOT_INITIALIZED
+on_screen_enemy_block = NOT_INITIALIZED
+bullets = NOT_INITIALIZED
 
 # Blocks, or barriers
-blocks = core.create_blocks(configurations.NUMBER_OF_BLOCKS)
+blocks = core.create_blocks(NUMBER_OF_BLOCKS)
 
 
 def main():
 
-    global bullet
+    global logical_enemy_block
+    global bullets
     # Game Loop
     running = True
     game_over = False
@@ -56,75 +65,101 @@ def main():
 
         # RGB
         screen.fill((0, 180, 0))
-        running = core.check_events(player, bullet)
-
-        # bullet movement
-        if Bullet.bullet_state is Bullet.BULLET_FIRE:
-            if not Bullet.ON_SCREEN:
-                bullet = core.bullet_init(player)
-            if bullet.y_cord is configurations.OFF_SCREEN:
-                Bullet.reset_bullet_state()
-            else:
-                bullet.blit(screen)
-                bullet.y_cord -= bullet.y_change
-                bullet_block_collision = False
-                bullet_block_collision = core.is_block_bullet_collision(
-                    blocks, bullet
-                )
-                if bullet_block_collision is not None:
-                    core.react_block_bullet_collision(
-                        bullet_block_collision["block"],
-                        bullet,
-                        bullet_block_collision["rect"],
-                    )
+        running = core.check_events(player)
 
         for block in blocks:
-            block.blit(screen, configurations.BLACK)
+            block.blit(screen, BLACK)
+
+        if game_over:
+            core.do_game_over(on_screen_enemy_block, screen)
 
         # player movement
         # player should be stopped on the x axis when the icon_width + position
         # are about to go out of the upper or lower x boundary
-        if (
-            player.x_cord + player.x_cord_change
-            < configurations.X_LOWER_BOUNDARY
-        ) or (player.x_cord + player.x_cord_change > X_UPPER_BOUNDARY_PLAYER):
+        if core.is_player_outof_bounds(player):
             player.x_cord_change = 0
+        if core.is_bullet_init(player):
+            if player.bullet not in bullets:
+                bullets.append(player.bullet)
+            if player.bullet.is_off_screen():
+                bullets.remove(player.bullet)
+                player.reset_bullet()
 
         # enemy movement
         # enemy should be stopped on the x axis when the icon_width + position
         # are about to go out of the upper or lower x boundary
-        for enemy in enemies:
+        for enemy in on_screen_enemy_block:
+            if enemy is EnemyBlock.DESTROYED_ENEMY_SLOT:
+                continue
             bullet_enemy_collision = (
                 core.is_collision(
-                    enemy.x_cord, bullet.x_cord, enemy.y_cord, bullet.y_cord
+                    enemy.x_cord,
+                    player.bullet.x_cord,
+                    enemy.y_cord,
+                    player.bullet.y_cord,
                 )
-                if Bullet.bullet_state is Bullet.BULLET_FIRE
+                if core.is_bullet_init(player)
                 else False
             )
             player_enemy_collision = core.is_collision(
                 player.x_cord, enemy.x_cord, player.y_cord, enemy.y_cord
             )
             if player_enemy_collision or game_over:
-                core.do_game_over(enemies, screen)
                 game_over = True
                 break
             if bullet_enemy_collision:
-                core.destroy_enemy(bullet, enemy, enemies, score)
+                core.destroy_enemy(
+                    enemy, on_screen_enemy_block, logical_enemy_block,
+                )
+                player.reset_bullet()
+                score.add_points(POINTS_PER_KILL)
                 continue
-            elif (
-                enemy.x_cord + enemy.x_cord_change
-                < configurations.X_LOWER_BOUNDARY
-            ):
-                core.go_down_right(enemies, screen)
+            elif core.is_enemy_outof_lower_bounds(enemy):
+                core.go_down_right(on_screen_enemy_block, screen)
                 break
-            elif enemy.x_cord + enemy.x_cord_change > X_UPPER_BOUNDARY_ENEMY:
-                core.go_down_left(enemies, screen)
+            elif core.is_enemy_outof_upper_bounds(enemy):
+                core.go_down_left(on_screen_enemy_block, screen)
                 break
             enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
 
-        if(len(enemies) == 0):
-            core.do_game_over(enemies, screen)
+        # Choosing enemy to fire bullet (and if to)
+        enemy_choice = random.randint(0, 4)
+        enemy = EnemyBlock.DESTROYED_ENEMY_SLOT
+        row_index = -1
+        while enemy is EnemyBlock.DESTROYED_ENEMY_SLOT:
+            if abs(row_index) >= Block.NODES_PER_COLUMN:
+                break
+            enemy = logical_enemy_block.STRUCTURE[row_index][enemy_choice]
+            row_index -= 1
+            # If the enemy selected on the last row does not exist
+            # (or EnemyBlock.DESTROYED_ENEMY_SLOT)
+            # Look at the same enemy index on the row above
+
+        if (
+            core.should_enemy_fire()
+            and enemy != EnemyBlock.DESTROYED_ENEMY_SLOT
+        ):
+            bullets.append(enemy.bullet_init())
+
+        # Bullet movement
+        for bullet in bullets:
+            continue_tracking_bullet = core.track_bullet_movement(
+                bullet, blocks, screen
+            )
+            if not continue_tracking_bullet:
+                bullets.remove(bullet)
+                bullet.reset_bullet()
+            if bullet is not player.bullet:
+                bullet_player_collision = core.is_collision(
+                    bullet.x_cord, player.x_cord, bullet.y_cord, player.y_cord,
+                )
+                if bullet_player_collision:
+                    game_over = True
+                    break
+
+        if len(on_screen_enemy_block) == 0:
+            game_over = True
         player.blit(screen)
         player.x_cord += player.x_cord_change
         core.show_score(score, screen)
@@ -132,18 +167,15 @@ def main():
 
 
 def game_init():
+
     global player
-    global enemies
-    global X_UPPER_BOUNDARY_PLAYER
-    global X_UPPER_BOUNDARY_ENEMY
+    global on_screen_enemy_block
+    global logical_enemy_block
+    global bullets
     player = Player()
-    enemies = core.create_enemy_block().STRUCTURE
-    X_UPPER_BOUNDARY_PLAYER = (
-        configurations.SCREEN_BOUNDARY_X - player.IMG_WIDTH
-    )
-    X_UPPER_BOUNDARY_ENEMY = (
-        configurations.SCREEN_BOUNDARY_X - Enemy.IMG_WIDTH
-    )  # assuming all enemies use same image
+    bullets = list()
+    logical_enemy_block = core.create_enemy_block()
+    on_screen_enemy_block = logical_enemy_block.UNITS
 
 
 if __name__ == "__main__":

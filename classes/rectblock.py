@@ -9,7 +9,6 @@ from classes.block import Block
 
 
 class RectBlock(Block):
-
     def __init__(
         self,
         top_left,
@@ -19,9 +18,9 @@ class RectBlock(Block):
     ):
 
         super().__init__(top_left, bottom_right)
-        if(NODES_PER_COLUMN is not self.DEFAULT_PARENT_VALUE):
+        if NODES_PER_COLUMN is not self.DEFAULT_PARENT_VALUE:
             self.NODES_PER_COLUMN = NODES_PER_COLUMN
-        if(NODES_PER_ROW is not self.DEFAULT_PARENT_VALUE):
+        if NODES_PER_ROW is not self.DEFAULT_PARENT_VALUE:
             self.NODES_PER_ROW = NODES_PER_ROW
         self._create_block()
 
@@ -47,5 +46,5 @@ class RectBlock(Block):
 
     def blit(self, screen, COLOR):
 
-        for rect in self.STRUCTURE:
+        for rect in self.UNITS:
             pygame.draw.rect(screen, COLOR, rect)

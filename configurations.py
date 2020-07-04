@@ -23,7 +23,6 @@ CYAN = (0, 255, 255)
 
 # Configurations (expected to change frequently)
 
-NUMBER_OF_ENEMIES = 12
 POINTS_PER_KILL = 20
 NUMBER_OF_BLOCKS = 5
 DEFAULT_ENEMY_SPEED = 0.12
@@ -45,7 +44,7 @@ GAME_FONT = "freesansbold.ttf"
 
 # Other
 
-OFF_SCREEN = -1
+OFF_SCREEN_Y_CORD = SCREEN_BOUNDARY_Y * -5
 X_LOWER_BOUNDARY = 0
 Y_LOWER_BOUNDARY = 0
 NOT_INITIALIZED = None
