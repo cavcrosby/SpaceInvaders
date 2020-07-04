@@ -11,7 +11,10 @@ from configurations import (
     DEFAULT_ENEMY_DROP,
     DEFAULT_ENEMY_SPEED,
     BULLET_SHOOTING_SOUND_PATH,
-    NOT_INITIALIZED
+    NOT_INITIALIZED,
+    OFF_SCREEN_Y_CORD,
+    SCREEN_BOUNDARY_Y,
+    SCREEN_BOUNDARY_X,
 )
 
 
@@ -53,6 +56,7 @@ class Player(GameObject):
         pygame.image.load("./images/player_ship.png"), (56, 56)
     )
     IMG_WIDTH = IMG.get_rect().size[0]
+    X_UPPER_BOUNDARY = SCREEN_BOUNDARY_X - IMG_WIDTH
     bullet = NOT_INITIALIZED
 
     def __init__(self):
@@ -62,10 +66,15 @@ class Player(GameObject):
 
     def bullet_init(self):
 
-        bullet = Bullet(self)
+        bullet = Bullet(self, y_change=1, x_offset=20)
         bullet_sound = pygame.mixer.Sound(BULLET_SHOOTING_SOUND_PATH)
         bullet_sound.play()
-        self.BULLET = bullet
+        self.bullet = bullet
+
+    def reset_bullet(self):
+
+        self.bullet.reset_bullet()
+        self.bullet = NOT_INITIALIZED
 
 
 class Enemy(GameObject):
@@ -74,7 +83,7 @@ class Enemy(GameObject):
         pygame.image.load("./images/alien.png"), (56, 56)
     )
     IMG_WIDTH = IMG.get_rect().size[0]
-    bullet = NOT_INITIALIZED
+    X_UPPER_BOUNDARY = SCREEN_BOUNDARY_X - IMG_WIDTH
 
     def __init__(self, screen_boundary_x):
         super().__init__(
@@ -86,11 +95,12 @@ class Enemy(GameObject):
 
     def bullet_init(self):
 
-        bullet = Bullet(self)
-        bullet_sound = pygame.mixer.Sound(BULLET_SHOOTING_SOUND_PATH)
-        bullet_sound.play()
-        bullet.ON_SCREEN = True
-        self.BULLET = bullet
+        bullet = Bullet(self, y_change=-1, x_offset=22, y_offset=20)
+        return bullet
+
+    def reset_bullet(self):
+
+        self.bullet = NOT_INITIALIZED
 
     @classmethod
     def from_manual_cords(
@@ -120,23 +130,20 @@ class Enemy(GameObject):
 class Bullet(GameObject):
 
     IMG = pygame.image.load("./images/bullet.png")
-    BULLET_READY = "ready"
-    BULLET_FIRE = "fire"
 
-    # ready -- state meaning, cannot see bullet on screen
-    # fire -- state meaning, bullet is currently moving on screen
+    def __init__(self, gameobject, y_change, x_offset=0, y_offset=0):
+        super().__init__(
+            gameobject.x_cord + x_offset, gameobject.y_cord + y_offset
+        )
+        self.y_change = y_change
 
-    def __init__(self, gameobject):
-        super().__init__(gameobject.x_cord + 20, gameobject.y_cord)
-        self.y_change = 1
-        self.bullet_state = self.BULLET_READY
-        self.on_screen = False
+    def is_off_screen(self):
 
-    @classmethod
-    def reset_bullet_state(cls):
+        return self.y_cord < 0 or self.y_cord > SCREEN_BOUNDARY_Y
 
-        cls.bullet_state = cls.BULLET_READY
-        cls.ON_SCREEN = False
+    def reset_bullet(self):
+
+        self.y_cord = OFF_SCREEN_Y_CORD
 
 
 class Score(GameObject):

@@ -17,7 +17,7 @@ class Block(ABC):
     @property
     def UNITS(self):
 
-        return [node for column in self.STRUCTURE for node in column]
+        return [node for row in self._structure for node in row]
 
     @property
     def STRUCTURE(self):
@@ -30,11 +30,11 @@ class Block(ABC):
         self.top_left = top_left
         self.bottom_right = bottom_right
 
-    def remove_unit(self, unit):
+    def remove_node_from_row(self, node):
 
-        for column in self.STRUCTURE:
-            if unit in column:
-                column.remove(unit)
+        for row in self._structure:
+            if node in row:
+                row.remove(node)
 
     def _create_block(self):
 
@@ -53,7 +53,7 @@ class Block(ABC):
                     self._return_node(left, top_copy, NODE_WIDTH, NODE_HEIGHT)
                 )
                 top_copy += NODE_HEIGHT - 1
-            self.STRUCTURE.append(col)
+            self._structure.append(col)
             left += NODE_WIDTH - 1
             # ({NODE_WIDTH,NODE_HEIGHT} - 1)
             # this is to make nodes appear as one block
