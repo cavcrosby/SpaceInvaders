@@ -1,6 +1,11 @@
 # Changelog
 All changes between releases of this project will be documented here.
 
+## [v1.3.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.3.0) - 2020-07-04
+### Added
+- Enemies can now fire bullets.
+     - These bullets can destroy the player and blocks/barriers.
+
 ## [v1.2.1](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.2.1) - 2020-06-28
 ### Changed
 - Enemies will now move on both ends of the screen as a block.
