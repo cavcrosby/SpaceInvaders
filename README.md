@@ -20,7 +20,7 @@ cd SpaceInvaders
 python main.py
 ```
 
-## Demo Video
+## Demo
 ![](https://media.giphy.com/media/S4HqrfnXXmgpHPSHuu/giphy.gif)
 
 ## License
