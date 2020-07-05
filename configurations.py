@@ -25,6 +25,7 @@ CYAN = (0, 255, 255)
 
 POINTS_PER_KILL = 20
 NUMBER_OF_BLOCKS = 5
+DEFAULT_PLAYER_SPEED = 1  # speed on the x-axis
 DEFAULT_ENEMY_SPEED = 0.12  # speed on the x-axis
 DEFAULT_ENEMY_DROP = 20  # each drop on the y-axis
 

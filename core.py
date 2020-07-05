@@ -20,6 +20,7 @@ from configurations import (
     OFF_SCREEN_Y_CORD,
     DEFAULT_ENEMY_SPEED,
     EXPLOSION_SOUND_PATH,
+    DEFAULT_PLAYER_SPEED
 )
 
 
@@ -150,9 +151,9 @@ def check_events(player):
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                player.x_cord_change = -0.6
+                player.x_cord_change = -1 * DEFAULT_PLAYER_SPEED
             if event.key == pygame.K_RIGHT:
-                player.x_cord_change = 0.6
+                player.x_cord_change = DEFAULT_PLAYER_SPEED
             if (
                 event.key == pygame.K_SPACE
                 and player.bullet is NOT_INITIALIZED

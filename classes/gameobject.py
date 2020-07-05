@@ -73,7 +73,7 @@ class Player(GameObject):
 
     def bullet_init(self):
 
-        bullet = Bullet(self, y_change=1, x_offset=20)
+        bullet = Bullet(self, y_change=1.5, x_offset=20)
         bullet_sound = pygame.mixer.Sound(BULLET_SHOOTING_SOUND_PATH)
         bullet_sound.play()
         self.bullet = bullet
@@ -102,7 +102,7 @@ class Enemy(GameObject):
 
     def bullet_init(self):
 
-        bullet = Bullet(self, y_change=-1, x_offset=22, y_offset=20)
+        bullet = Bullet(self, y_change=-1.3, x_offset=22, y_offset=20)
         return bullet
 
     def reset_bullet(self):
