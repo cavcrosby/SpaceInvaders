@@ -1,9 +1,9 @@
 # Standard Library Imports
 import math
+import random
 
 # Third Party Imports
 import pygame
-import random
 from pygame import mixer
 
 # Local Application Imports

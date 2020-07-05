@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Standard Library Imports
+import random
 
 # Third Party Imports
 import pygame
-import random
 from pygame import mixer
 
 # Local Application Imports
