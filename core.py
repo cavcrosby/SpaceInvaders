@@ -53,7 +53,7 @@ def is_enemy_out_of_lower_bounds(enemy):
 def should_enemy_fire(enemy):
 
     if enemy is not EnemyBlock.DESTROYED_ENEMY_SLOT:
-        return random.randint(1, 150) == 1
+        return random.randint(1, 250) == 1
     return False
 
 
