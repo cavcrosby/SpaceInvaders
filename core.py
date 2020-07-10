@@ -20,7 +20,7 @@ from configurations import (
     OFF_SCREEN_Y_CORD,
     DEFAULT_ENEMY_SPEED,
     EXPLOSION_SOUND_PATH,
-    DEFAULT_PLAYER_SPEED
+    DEFAULT_PLAYER_SPEED,
 )
 
 
