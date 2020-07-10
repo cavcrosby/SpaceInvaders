@@ -143,6 +143,8 @@ def main():
 
         # Bullet movement
         for bullet in bullets:
+            if(game_over):
+                break
             continue_tracking_bullet = core.track_bullet_movement(
                 bullet, blocks, screen
             )
@@ -155,6 +157,7 @@ def main():
                     bullet.x_cord, player.x_cord, bullet.y_cord, player.y_cord,
                 )
                 if bullet_player_collision:
+                    bullets.remove(bullet)
                     game_over = True
                     game_over_message = DEFEAT_MESSAGE
                     break
