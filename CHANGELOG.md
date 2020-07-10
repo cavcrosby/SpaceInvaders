@@ -1,6 +1,18 @@
 # Changelog
 All changes between releases of this project will be documented here.
 
+## [v2.0.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v2.0.0) - 2020-07-10
+### Added
+- Game over message.
+    - Either when defeated or having won the game.
+- More bullet mechanics.
+    - When the player gets hit or when the game is over, bullets disappear.
+- Windows executable.
+
+### Changed
+- Player and bullet speeds (for both enemies and players).
+- The probability of enemies firing bullets.
+
 ## [v1.3.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v1.3.0) - 2020-07-04
 ### Added
 - Enemies can now fire bullets.
