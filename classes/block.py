@@ -1,5 +1,8 @@
 # Standard Library Imports
-from abc import ABC, abstractmethod
+from abc import (
+    ABC,
+    abstractmethod,
+)
 
 # Third Party Imports
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Standard Library Imports
+import random
 
 # Third Party Imports
 import pygame
-import random
 from pygame import mixer
 
 # Local Application Imports
@@ -43,7 +43,7 @@ mixer.music.load(BACKGROUND_MUSIC_PATH)
 mixer.music.play(-1)
 
 # Main game objects
-score = Score()
+score = NOT_INITIALIZED
 player = NOT_INITIALIZED
 logical_enemy_block = NOT_INITIALIZED
 on_screen_enemy_block = NOT_INITIALIZED
@@ -58,6 +58,9 @@ def main():
     global logical_enemy_block
     global bullets
     # Game Loop
+    VICTORY_MESSAGE = "YOU WON!"
+    DEFEAT_MESSAGE = "DEFEATED!"
+    game_over_message = None
     running = True
     game_over = False
 
@@ -71,7 +74,7 @@ def main():
             block.blit(screen, BLACK)
 
         if game_over:
-            core.do_game_over(on_screen_enemy_block, screen)
+            core.do_game_over(on_screen_enemy_block, screen, game_over_message)
 
         # player movement
         # player should be stopped on the x axis when the icon_width + position
@@ -89,8 +92,13 @@ def main():
         # enemy should be stopped on the x axis when the icon_width + position
         # are about to go out of the upper or lower x boundary
         for enemy in on_screen_enemy_block:
-            if enemy is EnemyBlock.DESTROYED_ENEMY_SLOT:
-                continue
+            player_enemy_collision = core.is_collision(
+                player.x_cord, enemy.x_cord, player.y_cord, enemy.y_cord
+            )
+            if player_enemy_collision:
+                game_over = True
+                game_over_message = DEFEAT_MESSAGE
+                break
             bullet_enemy_collision = (
                 core.is_collision(
                     enemy.x_cord,
@@ -101,12 +109,6 @@ def main():
                 if core.is_bullet_init(player)
                 else False
             )
-            player_enemy_collision = core.is_collision(
-                player.x_cord, enemy.x_cord, player.y_cord, enemy.y_cord
-            )
-            if player_enemy_collision or game_over:
-                game_over = True
-                break
             if bullet_enemy_collision:
                 core.destroy_enemy(
                     enemy, on_screen_enemy_block, logical_enemy_block,
@@ -114,17 +116,17 @@ def main():
                 player.reset_bullet()
                 score.add_points(POINTS_PER_KILL)
                 continue
-            elif core.is_enemy_outof_lower_bounds(enemy):
+            elif core.is_enemy_out_of_lower_bounds(enemy):
                 core.go_down_right(on_screen_enemy_block, screen)
                 break
-            elif core.is_enemy_outof_upper_bounds(enemy):
+            elif core.is_enemy_out_of_upper_bounds(enemy):
                 core.go_down_left(on_screen_enemy_block, screen)
                 break
             enemy.blit(screen)
             enemy.x_cord += enemy.x_cord_change
 
         # Choosing enemy to fire bullet (and if to)
-        enemy_choice = random.randint(0, 4)
+        enemy_choice = random.randint(0, Block.NODES_PER_ROW)
         enemy = EnemyBlock.DESTROYED_ENEMY_SLOT
         row_index = -1
         while enemy is EnemyBlock.DESTROYED_ENEMY_SLOT:
@@ -136,30 +138,34 @@ def main():
             # (or EnemyBlock.DESTROYED_ENEMY_SLOT)
             # Look at the same enemy index on the row above
 
-        if (
-            core.should_enemy_fire()
-            and enemy != EnemyBlock.DESTROYED_ENEMY_SLOT
-        ):
+        if core.should_enemy_fire(enemy):
             bullets.append(enemy.bullet_init())
 
         # Bullet movement
         for bullet in bullets:
+            if(game_over):
+                break
             continue_tracking_bullet = core.track_bullet_movement(
                 bullet, blocks, screen
             )
             if not continue_tracking_bullet:
                 bullets.remove(bullet)
                 bullet.reset_bullet()
+                continue
             if bullet is not player.bullet:
                 bullet_player_collision = core.is_collision(
                     bullet.x_cord, player.x_cord, bullet.y_cord, player.y_cord,
                 )
                 if bullet_player_collision:
+                    bullets.remove(bullet)
                     game_over = True
+                    game_over_message = DEFEAT_MESSAGE
                     break
 
         if len(on_screen_enemy_block) == 0:
             game_over = True
+            game_over_message = VICTORY_MESSAGE
+
         player.blit(screen)
         player.x_cord += player.x_cord_change
         core.show_score(score, screen)
@@ -172,7 +178,9 @@ def game_init():
     global on_screen_enemy_block
     global logical_enemy_block
     global bullets
+    global score
     player = Player()
+    score = Score()
     bullets = list()
     logical_enemy_block = core.create_enemy_block()
     on_screen_enemy_block = logical_enemy_block.UNITS

@@ -1,6 +1,9 @@
 # Standard Library Imports
 import random
-from abc import ABC, abstractproperty
+from abc import (
+    ABC,
+    abstractproperty,
+)
 
 # Third Party Imports
 import pygame
@@ -15,6 +18,9 @@ from configurations import (
     OFF_SCREEN_Y_CORD,
     SCREEN_BOUNDARY_Y,
     SCREEN_BOUNDARY_X,
+    PLAYER_ICON_PATH,
+    ENEMY_ICON_PATH,
+    BULLET_ICON_PATH,
 )
 
 
@@ -53,7 +59,8 @@ class GameObject(ABC):
 class Player(GameObject):
 
     IMG = pygame.transform.scale(
-        pygame.image.load("./images/player_ship.png"), (56, 56)
+        pygame.image.load(PLAYER_ICON_PATH),
+        (56, 56),
     )
     IMG_WIDTH = IMG.get_rect().size[0]
     X_UPPER_BOUNDARY = SCREEN_BOUNDARY_X - IMG_WIDTH
@@ -80,7 +87,7 @@ class Player(GameObject):
 class Enemy(GameObject):
 
     IMG = pygame.transform.scale(
-        pygame.image.load("./images/alien.png"), (56, 56)
+        pygame.image.load(ENEMY_ICON_PATH), (56, 56)
     )
     IMG_WIDTH = IMG.get_rect().size[0]
     X_UPPER_BOUNDARY = SCREEN_BOUNDARY_X - IMG_WIDTH
@@ -95,7 +102,7 @@ class Enemy(GameObject):
 
     def bullet_init(self):
 
-        bullet = Bullet(self, y_change=-1, x_offset=22, y_offset=20)
+        bullet = Bullet(self, y_change=-0.5, x_offset=22, y_offset=20)
         return bullet
 
     def reset_bullet(self):
@@ -129,7 +136,7 @@ class Enemy(GameObject):
 
 class Bullet(GameObject):
 
-    IMG = pygame.image.load("./images/bullet.png")
+    IMG = pygame.image.load(BULLET_ICON_PATH)
 
     def __init__(self, gameobject, y_change, x_offset=0, y_offset=0):
         super().__init__(
