@@ -1,6 +1,10 @@
 # Changelog
 All changes between releases of this project will be documented here.
 
+## [v2.0.1](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v2.0.1) - 2020-07-11
+### Fixed
+- Executable did not work and has been replaced. 
+
 ## [v2.0.0](https://github.com/reap2sow1/SpaceInvaders/releases/tag/v2.0.0) - 2020-07-10
 ### Added
 - Game over message.
