@@ -23,6 +23,8 @@ from configurations import (
     DEFAULT_PLAYER_SPEED,
 )
 
+mixer.init()
+
 
 def show_score(score, screen):
 
