@@ -21,6 +21,10 @@ git clone https://github.com/reap2sow1/SpaceInvaders.git
 cd SpaceInvaders
 python main.py
 ```
+***or (Windows users)***
+1. Download the repository as a zip file.
+2. Extract the zip file to a given location.
+3. Launch the executable inside the directory.
 
 ## Demo
 ![](https://media.giphy.com/media/S4HqrfnXXmgpHPSHuu/giphy.gif)
