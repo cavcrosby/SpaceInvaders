@@ -17,7 +17,7 @@ Since the game is written in Python, it can be considered cross platform.
    * pygame
 
 ```shell
-git clone https://github.com/reap2sow1/SpaceInvaders.git
+git clone https://github.com/cavcrosby/SpaceInvaders.git
 cd SpaceInvaders
 python main.py
 ```
